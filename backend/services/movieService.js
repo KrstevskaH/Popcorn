@@ -1,12 +1,6 @@
-// backend/services/movieService.js
-
 const axios = require('axios');
 
-// Load the API key from environment variables
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
-
-console.log('TMDB_API_KEY:', TMDB_API_KEY);  // For debugging, remove this later
-
 const BASE_URL = 'https://api.themoviedb.org/3';
 
 async function fetchPopularMovies() {
@@ -27,8 +21,24 @@ async function fetchMoviesBySearch(query) {
   return response.data;
 }
 
+// NEW: fetch all genres
+async function fetchGenres() {
+  const url = `${BASE_URL}/genre/movie/list?api_key=${TMDB_API_KEY}&language=en-US`;
+  const response = await axios.get(url);
+  return response.data;
+}
+
+// NEW: fetch movies by genre id
+async function fetchMoviesByGenre(genreId) {
+  const url = `${BASE_URL}/discover/movie?api_key=${TMDB_API_KEY}&with_genres=${genreId}&language=en-US&page=1`;
+  const response = await axios.get(url);
+  return response.data;
+}
+
 module.exports = {
   fetchPopularMovies,
   fetchMovieById,
   fetchMoviesBySearch,
+  fetchGenres,
+  fetchMoviesByGenre,
 };

@@ -1,9 +1,9 @@
-// backend/controllers/movieController.js
-
 const {
   fetchPopularMovies,
   fetchMovieById,
-  fetchMoviesBySearch
+  fetchMoviesBySearch,
+  fetchGenres,            // new
+  fetchMoviesByGenre      // new
 } = require('../services/movieService');
 
 async function getPopularMovies(req, res) {
@@ -34,8 +34,31 @@ async function searchMovies(req, res) {
   }
 }
 
+// NEW: get all genres
+async function getGenres(req, res) {
+  try {
+    const genres = await fetchGenres();
+    res.json(genres);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+// NEW: get movies by genre id
+async function getMoviesByGenre(req, res) {
+  try {
+    const genreId = req.params.genreId;
+    const movies = await fetchMoviesByGenre(genreId);
+    res.json(movies);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   getPopularMovies,
   getMovieById,
   searchMovies,
+  getGenres,
+  getMoviesByGenre,
 };
